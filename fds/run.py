@@ -63,7 +63,13 @@ class Run(object):
             answers = PyInquirer.prompt(questions)
             if answers["install"]:
                 print("\nUpgrading package. Please re-enter the command once upgrade has been completed.\n")
-                execute_command(["pip install fastds --upgrade"], shell=True, capture_output=False)
+                try:
+                    self.printer.log("Using pip to install fds")
+                    execute_command(["pip install fastds --upgrade"], shell=True, capture_output=False)
+                except Exception as e:
+                    self.printer.error("fds failed to install when using pip")
+                    self.printer.log("Using pip3 to install fds")
+                    execute_command(["pip3 install fastds --upgrade"], shell=True, capture_output=False)
                 sys.exit()
             else:
                 ret_code = 0
